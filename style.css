@@ -48,12 +48,6 @@ body, html {
     touch-action: none; /* Prevents zooming the page */
 }
 
-/* THE MAGIC TRICK */
-.remove-bg {
-    mix-blend-mode: multiply; 
-    filter: contrast(1.2); 
-}
-
 /* --- THE UI PANEL --- */
 #ui-panel {
     position: absolute; 
@@ -150,7 +144,7 @@ input[type="range"]::-webkit-slider-thumb {
     box-shadow: 0 1px 4px rgba(0,0,0,0.5);
 }
 
-/* Custom iOS-Style Toggle Switch */
+/* Custom iOS-Style Toggle Switch (Used for Flashlight) */
 .toggle-switch {
     position: relative; 
     display: inline-block; 
@@ -197,7 +191,7 @@ input[type="range"]::-webkit-slider-thumb {
     transform: translateX(16px);
 }
 
-/* Floating Show Button */
+/* Floating Show Button (Pill Shape for Text) */
 #show-ui-btn {
     position: absolute; 
     bottom: 15px; 
