@@ -22,18 +22,24 @@
     <div id="ui-panel">
         
         <div class="btn-row">
-            <label for="image-upload" class="custom-btn">Upload</label>
+            <label for="image-upload" class="custom-btn">📁 Upload Image</label>
             <input type="file" id="image-upload" accept="image/*">
-            
-            <button id="torch-btn" class="custom-btn" style="display: none;">Flashlight</button>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" id="torch-group" style="display: none; justify-content: space-between;">
+            <span class="label-text">🔦 Flashlight</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="torch-toggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+
+        <div class="control-group" style="justify-content: space-between;">
+            <span class="label-text">Remove White BG</span>
             <label class="toggle-switch">
                 <input type="checkbox" id="remove-bg-toggle">
                 <span class="toggle-slider"></span>
             </label>
-            <span class="label-text">Remove White BG</span>
         </div>
 
         <div class="control-group">
