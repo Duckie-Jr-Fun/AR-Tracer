@@ -22,24 +22,21 @@
     <div id="ui-panel">
         
         <div class="btn-row">
-            <label for="image-upload" class="custom-btn">Upload Image</label>
+            <label for="image-upload" class="custom-btn">📁 Upload Image</label>
             <input type="file" id="image-upload" accept="image/*">
         </div>
 
         <div class="control-group" id="torch-group" style="display: none; justify-content: space-between;">
-            <span class="label-text">Flashlight</span>
+            <span class="label-text">🔦 Flashlight</span>
             <label class="toggle-switch">
                 <input type="checkbox" id="torch-toggle">
                 <span class="toggle-slider"></span>
             </label>
         </div>
 
-        <div class="control-group" style="justify-content: space-between;">
-            <span class="label-text">Remove White BG</span>
-            <label class="toggle-switch">
-                <input type="checkbox" id="remove-bg-toggle">
-                <span class="toggle-slider"></span>
-            </label>
+        <div class="control-group">
+            <span class="label-text">Erase BG</span>
+            <input type="range" id="bg-tolerance" min="0" max="100" step="1" value="0">
         </div>
 
         <div class="control-group">
@@ -52,10 +49,10 @@
             <input type="range" id="scale-slider" min="0.1" max="3" step="0.1" value="1">
         </div>
 
-        <button id="hide-ui-btn" class="custom-btn hide-btn">Hide</button>
+        <button id="hide-ui-btn" class="custom-btn hide-btn">Hide Menu</button>
     </div>
 
-    <button id="show-ui-btn" style="display: none;">Show</button>
+    <button id="show-ui-btn" style="display: none;">Show Menu</button>
 
     <script src="app.js"></script>
 </body>
