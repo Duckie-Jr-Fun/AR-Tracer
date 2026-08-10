@@ -8,7 +8,7 @@
 body, html {
     width: 100%;
     height: 100%;
-    overflow: hidden; /* Stops scrolling */
+    overflow: hidden; 
     background-color: #000;
     font-family: system-ui, -apple-system, sans-serif;
 }
@@ -35,7 +35,7 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    pointer-events: none; /* Lets clicks pass through to the image itself */
+    pointer-events: none;
 }
 
 /* The actual image you will trace */
@@ -43,91 +43,125 @@ body, html {
     max-width: 90%;
     max-height: 90%;
     transform-origin: center;
-    pointer-events: auto; /* Re-enables touch/click for the image */
+    pointer-events: auto; 
     cursor: grab;
-    /* CRITICAL: Prevents the browser from zooming the whole page when you pinch the image */
     touch-action: none; 
 }
 
-/* THE MAGIC TRICK: This class will be toggled by JS. 
-   'Multiply' makes pure white completely transparent and keeps black solid. */
+/* THE MAGIC TRICK */
 .remove-bg {
     mix-blend-mode: multiply;
-    filter: contrast(1.2); /* Bumps the contrast slightly to make lines pop */
+    filter: contrast(1.2); 
 }
 
-/* The floating UI Panel */
+/* =========================================
+   THE NEW, COMPACT, SLIM UI PANEL
+   ========================================= */
+
 #ui-panel {
     position: absolute;
-    bottom: 20px;
+    bottom: 15px; 
     left: 50%;
     transform: translateX(-50%);
-    width: 90%;
-    max-width: 400px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px); /* Gives it a nice frosted glass look */
-    border-radius: 16px;
-    padding: 20px;
+    width: 92%; 
+    max-width: 350px; /* Slimmer max width */
+    
+    /* Dark, sleek glass look */
+    background: rgba(20, 20, 20, 0.65); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px); /* Safari support */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    
+    padding: 12px 16px; /* Much tighter padding */
     z-index: 10;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    color: white; 
     transition: opacity 0.3s ease;
 }
 
+/* Hide the title to save space */
 #ui-panel h1 {
-    font-size: 1.2rem;
-    text-align: center;
-    margin-bottom: 15px;
-    color: #333;
+    display: none; 
 }
 
 .control-group {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+    align-items: center; /* Aligns label and input horizontally */
+    justify-content: space-between;
+    gap: 10px;
 }
 
 .control-group label {
-    font-size: 0.9rem;
-    color: #555;
-    font-weight: bold;
+    font-size: 0.8rem;
+    color: #ddd;
+    font-weight: 500;
+    flex-shrink: 0;
+    width: 95px; /* Keeps the sliders lined up perfectly */
 }
 
-/* Make sliders look a bit nicer for mobile */
-input[type="range"] {
-    width: 100%;
-    height: 40px; /* Taller area for fat fingers */
-}
-
+/* Smaller file input text */
 input[type="file"] {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
+    color: #ccc;
+    width: 100%;
 }
 
-/* Hide and Show Buttons */
+/* Custom, ultra-thin sliders */
+input[type="range"] {
+    flex-grow: 1;
+    height: 4px; /* Thin track */
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    outline: none;
+}
+
+/* The grabber circle on the slider */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px; /* Tappable size */
+    height: 18px;
+    border-radius: 50%;
+    background: #007AFF;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* Sleeker Buttons */
 button {
-    background-color: #007AFF;
+    background-color: rgba(255, 255, 255, 0.15);
     color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 20px;
-    font-size: 1rem;
-    font-weight: bold;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 8px 0;
+    font-size: 0.85rem;
+    font-weight: 600;
     width: 100%;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-top: 5px;
+    backdrop-filter: blur(4px);
 }
 
 button:active {
-    background-color: #0056b3;
+    background-color: rgba(255, 255, 255, 0.25);
 }
 
+/* The floating "Show UI" pill */
 #show-ui-btn {
     position: absolute;
     bottom: 20px;
     right: 20px;
     width: auto;
     z-index: 10;
-    background-color: rgba(255, 255, 255, 0.85);
-    color: #333;
-    backdrop-filter: blur(10px);
+    background: rgba(20, 20, 20, 0.65);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 10px 18px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
