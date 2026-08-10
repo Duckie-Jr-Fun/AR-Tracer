@@ -12,7 +12,6 @@ const torchGroup = document.getElementById('torch-group');
 const torchToggle = document.getElementById('torch-toggle');
 
 let videoTrack = null;
-let torchOn = false;
 
 // --- 1. Camera & Flashlight Setup ---
 async function startCamera() {
@@ -25,10 +24,10 @@ async function startCamera() {
         // Save the video track to control the flashlight
         videoTrack = stream.getVideoTracks()[0];
         
-        // Check if device has a flashlight and show the button if it does
+        // Check if device has a flashlight and show the toggle row if it does
         const capabilities = videoTrack.getCapabilities();
         if (capabilities.torch) {
-            torchBtn.style.display = 'inline-block';
+            torchGroup.style.display = 'flex';
         }
     } catch (err) {
         console.error("Camera error: ", err);
@@ -37,17 +36,18 @@ async function startCamera() {
 }
 startCamera();
 
-torchBtn.addEventListener('click', async () => {
+// --- Flashlight Toggle Logic ---
+torchToggle.addEventListener('change', async (e) => {
     if (videoTrack) {
         try {
-            torchOn = !torchOn;
+            // e.target.checked will be true if switch is ON, false if OFF
             await videoTrack.applyConstraints({
-                advanced: [{ torch: torchOn }]
+                advanced: [{ torch: e.target.checked }]
             });
-            // Highlight the button when the flashlight is on
-            torchBtn.style.background = torchOn ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.15)';
         } catch (err) {
             console.error("Flashlight error: ", err);
+            // If it fails for some reason, flip the switch back
+            e.target.checked = !e.target.checked;
         }
     }
 });
