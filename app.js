@@ -1,3 +1,4 @@
+// --- DOM Elements ---
 const cameraFeed = document.getElementById('camera-feed');
 const traceImage = document.getElementById('trace-image');
 const imageUpload = document.getElementById('image-upload');
@@ -12,7 +13,7 @@ const torchBtn = document.getElementById('torch-btn');
 let videoTrack = null;
 let torchOn = false;
 
-// --- Camera & Flashlight Setup ---
+// --- 1. Camera & Flashlight Setup ---
 async function startCamera() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -23,14 +24,14 @@ async function startCamera() {
         // Save the video track to control the flashlight
         videoTrack = stream.getVideoTracks()[0];
         
-        // Check if device has a flashlight
+        // Check if device has a flashlight and show the button if it does
         const capabilities = videoTrack.getCapabilities();
-        if (!capabilities.torch) {
-            torchBtn.style.display = 'none'; // Hide button if no flashlight
+        if (capabilities.torch) {
+            torchBtn.style.display = 'inline-block';
         }
     } catch (err) {
         console.error("Camera error: ", err);
-        alert("Could not access the camera.");
+        alert("Could not access the camera. Please check permissions.");
     }
 }
 startCamera();
@@ -42,6 +43,7 @@ torchBtn.addEventListener('click', async () => {
             await videoTrack.applyConstraints({
                 advanced: [{ torch: torchOn }]
             });
+            // Highlight the button when the flashlight is on
             torchBtn.style.background = torchOn ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.15)';
         } catch (err) {
             console.error("Flashlight error: ", err);
@@ -49,7 +51,7 @@ torchBtn.addEventListener('click', async () => {
     }
 });
 
-// --- Image Upload ---
+// --- 2. Image Upload ---
 imageUpload.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -58,19 +60,28 @@ imageUpload.addEventListener('change', function(e) {
             traceImage.src = event.target.result;
             traceImage.style.display = 'block';
             
-            // Reset position
-            currentX = 0; currentY = 0; currentScale = 1;
-            scaleSlider.value = 1; updateTransform();
+            // Reset position and scale when a new image is loaded
+            currentX = 0; 
+            currentY = 0; 
+            currentScale = 1;
+            scaleSlider.value = 1; 
+            updateTransform();
         }
         reader.readAsDataURL(file);
     }
 });
 
-// --- UI Controls ---
-opacitySlider.addEventListener('input', (e) => traceImage.style.opacity = e.target.value);
+// --- 3. UI Controls ---
+opacitySlider.addEventListener('input', (e) => {
+    traceImage.style.opacity = e.target.value;
+});
 
 removeBgToggle.addEventListener('change', (e) => {
-    e.target.checked ? traceImage.classList.add('remove-bg') : traceImage.classList.remove('remove-bg');
+    if (e.target.checked) {
+        traceImage.classList.add('remove-bg');
+    } else {
+        traceImage.classList.remove('remove-bg');
+    }
 });
 
 hideUiBtn.addEventListener('click', () => {
@@ -83,7 +94,7 @@ showUiBtn.addEventListener('click', () => {
     showUiBtn.style.display = 'none';
 });
 
-// --- Screen Wake Lock ---
+// --- 4. Screen Wake Lock API ---
 let wakeLock = null;
 async function requestWakeLock() {
     try {
@@ -95,14 +106,22 @@ async function requestWakeLock() {
     }
 }
 requestWakeLock();
+
+// Re-request lock if the user leaves the app and comes back
 document.addEventListener('visibilitychange', () => {
-    if (wakeLock !== null && document.visibilityState === 'visible') requestWakeLock();
+    if (wakeLock !== null && document.visibilityState === 'visible') {
+        requestWakeLock();
+    }
 });
 
-// --- Dragging & Scaling Logic ---
-let currentScale = 1, currentX = 0, currentY = 0;
-let isDragging = false, startX, startY, initialX, initialY;
+// --- 5. Dragging & Scaling Logic ---
+let currentScale = 1;
+let currentX = 0;
+let currentY = 0;
+let isDragging = false;
+let startX, startY, initialX, initialY;
 
+// Prevent default browser behavior on drag
 traceImage.ondragstart = () => false;
 
 function updateTransform() {
@@ -110,27 +129,48 @@ function updateTransform() {
 }
 
 scaleSlider.addEventListener('input', (e) => {
-    currentScale = e.target.value; updateTransform();
+    currentScale = e.target.value; 
+    updateTransform();
 });
 
+// Movement math
 function startDrag(clientX, clientY) {
-    isDragging = true; startX = clientX; startY = clientY;
-    initialX = currentX; initialY = currentY;
+    isDragging = true; 
+    startX = clientX; 
+    startY = clientY;
+    initialX = currentX; 
+    initialY = currentY;
 }
+
 function drag(clientX, clientY) {
     if (!isDragging) return;
     currentX = initialX + (clientX - startX);
     currentY = initialY + (clientY - startY);
     updateTransform();
 }
-function stopDrag() { isDragging = false; }
 
-// Touch
-traceImage.addEventListener('touchstart', (e) => startDrag(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
-document.addEventListener('touchmove', (e) => { if (isDragging) drag(e.touches[0].clientX, e.touches[0].clientY); });
+function stopDrag() { 
+    isDragging = false; 
+}
+
+// Mobile Touch Events
+traceImage.addEventListener('touchstart', (e) => {
+    startDrag(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: true });
+
+document.addEventListener('touchmove', (e) => { 
+    if (isDragging) drag(e.touches[0].clientX, e.touches[0].clientY); 
+});
+
 document.addEventListener('touchend', stopDrag);
 
-// Mouse
-traceImage.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
-document.addEventListener('mousemove', (e) => { if (isDragging) drag(e.clientX, e.clientY); });
+// Desktop Mouse Events (For testing on PC)
+traceImage.addEventListener('mousedown', (e) => {
+    startDrag(e.clientX, e.clientY);
+});
+
+document.addEventListener('mousemove', (e) => { 
+    if (isDragging) drag(e.clientX, e.clientY); 
+});
+
 document.addEventListener('mouseup', stopDrag);
