@@ -1,0 +1,16 @@
+{
+  "name": "AR Tracer",
+  "short_name": "Tracer",
+  "description": "An AR tool for tracing images using your device camera.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
