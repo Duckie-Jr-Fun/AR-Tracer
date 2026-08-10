@@ -1,0 +1,133 @@
+/* Reset margins and prevent accidental scrolling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Stops scrolling */
+    background-color: #000;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Make the camera fill the entire background */
+#camera-feed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 1;
+}
+
+/* Container for the uploaded image */
+#image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; /* Lets clicks pass through to the image itself */
+}
+
+/* The actual image you will trace */
+#trace-image {
+    max-width: 90%;
+    max-height: 90%;
+    transform-origin: center;
+    pointer-events: auto; /* Re-enables touch/click for the image */
+    cursor: grab;
+    /* CRITICAL: Prevents the browser from zooming the whole page when you pinch the image */
+    touch-action: none; 
+}
+
+/* THE MAGIC TRICK: This class will be toggled by JS. 
+   'Multiply' makes pure white completely transparent and keeps black solid. */
+.remove-bg {
+    mix-blend-mode: multiply;
+    filter: contrast(1.2); /* Bumps the contrast slightly to make lines pop */
+}
+
+/* The floating UI Panel */
+#ui-panel {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px); /* Gives it a nice frosted glass look */
+    border-radius: 16px;
+    padding: 20px;
+    z-index: 10;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s ease;
+}
+
+#ui-panel h1 {
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.control-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.control-group label {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: bold;
+}
+
+/* Make sliders look a bit nicer for mobile */
+input[type="range"] {
+    width: 100%;
+    height: 40px; /* Taller area for fat fingers */
+}
+
+input[type="file"] {
+    font-size: 0.9rem;
+}
+
+/* Hide and Show Buttons */
+button {
+    background-color: #007AFF;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+button:active {
+    background-color: #0056b3;
+}
+
+#show-ui-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: auto;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.85);
+    color: #333;
+    backdrop-filter: blur(10px);
+}
