@@ -8,7 +8,8 @@ const scaleSlider = document.getElementById('scale-slider');
 const hideUiBtn = document.getElementById('hide-ui-btn');
 const showUiBtn = document.getElementById('show-ui-btn');
 const uiPanel = document.getElementById('ui-panel');
-const torchBtn = document.getElementById('torch-btn');
+const torchGroup = document.getElementById('torch-group');
+const torchToggle = document.getElementById('torch-toggle');
 
 let videoTrack = null;
 let torchOn = false;
